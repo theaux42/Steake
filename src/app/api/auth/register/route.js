@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { registerUser, validateAge } from '../../../../../lib/auth.js';
+import { createSessionCookie } from '../../../../../lib/session.js';
 
 export async function POST(request) {
   try {
@@ -41,15 +42,23 @@ export async function POST(request) {
       birthDate
     });
 
-    return NextResponse.json({
+    // Create JWT token and response
+    const response = NextResponse.json({
       message: 'Registration successful',
       user: {
         id: user.id,
         username: user.username,
         email: user.email,
-        balance: user.balance
+        balance: user.balance,
+        isAdmin: user.is_admin
       }
     });
+
+    // Set JWT token cookie
+    const sessionCookie = createSessionCookie(user);
+    response.cookies.set('steake-token', sessionCookie.value, sessionCookie.options);
+
+    return response;
 
   } catch (error) {
     console.error('Registration error:', error);

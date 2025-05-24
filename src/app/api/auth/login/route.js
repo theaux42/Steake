@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { authenticateUser } from '../../../../../lib/auth.js';
+import { createSessionCookie } from '../../../../../lib/session.js';
 
 export async function POST(request) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request) {
       );
     }
 
-    // Create session (simplified - in production you'd use proper session management)
+    // Create JWT token and response
     const response = NextResponse.json({
       message: 'Login successful',
       user: {
@@ -33,17 +34,9 @@ export async function POST(request) {
       }
     });
 
-    // Set a simple session cookie
-    response.cookies.set('steake-session', JSON.stringify({
-      userId: user.id,
-      username: user.username,
-      isAdmin: user.is_admin
-    }), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
-    });
+    // Set JWT token cookie
+    const sessionCookie = createSessionCookie(user);
+    response.cookies.set('steake-token', sessionCookie.value, sessionCookie.options);
 
     return response;
   } catch (error) {

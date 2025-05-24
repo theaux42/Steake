@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
+import { clearSessionCookie } from '../../../../../lib/session.js';
 
 export async function POST(request) {
   const response = NextResponse.json({ message: 'Logout successful' });
   
-  // Clear the session cookie
-  response.cookies.set('steake-session', '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 0
-  });
+  // Clear the JWT token cookie
+  const sessionCookie = clearSessionCookie();
+  response.cookies.set('steake-token', sessionCookie.value, sessionCookie.options);
 
   return response;
 }

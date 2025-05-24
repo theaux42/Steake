@@ -115,14 +115,21 @@ export default function Home() {
   }, [loading, user]);
 
   useEffect(() => {
-    // Check if user is already logged in (check session)
+    // Check if user is already logged in (check JWT session)
     const checkSession = async () => {
       try {
-        // Since we're using httpOnly cookies, we can't access them directly
-        // We'll implement a session check endpoint if needed
-        setLoading(false);
+        const response = await fetch('/api/auth/session', {
+          method: 'GET',
+          credentials: 'include' // Include cookies
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user);
+        }
       } catch (error) {
         console.error('Session check error:', error);
+      } finally {
         setLoading(false);
       }
     };
