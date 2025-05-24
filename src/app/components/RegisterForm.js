@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
-export default function RegisterForm({ onSuccess, onToggleLogin }) {
+export default function RegisterForm({ onLogin, onSuccess, onToggleLogin }) {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -79,10 +79,10 @@ export default function RegisterForm({ onSuccess, onToggleLogin }) {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Registration successful! You can now login.');
-        setTimeout(() => {
-          onSuccess();
-        }, 2000);
+        // Automatically log in the user with the returned user data
+        onLogin(data.user);
+        // Close the registration modal
+        onSuccess();
       } else {
         setError(data.error || 'Registration failed');
       }

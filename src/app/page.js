@@ -416,6 +416,7 @@ export default function Home() {
                 ✕
               </button>
               <RegisterForm 
+                onLogin={handleLogin}
                 onSuccess={() => setShowRegister(false)}
                 onToggleLogin={() => {
                   setShowRegister(false);
