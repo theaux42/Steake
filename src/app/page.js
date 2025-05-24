@@ -251,6 +251,16 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Scroll Indicator */}
+          <div className="scroll-indicator">
+            <div className="flex flex-col items-center text-white/60">
+              <span className="text-sm mb-2">Scroll to explore</span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="animate-pulse">
+                <path d="M7 10l5 5 5-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+          </div>
+
           {/* Floating Cards Animation */}
           <div className="absolute top-1/4 left-10 animate-float">
             <div className="w-16 h-24 rounded-lg" style={{ background: 'linear-gradient(135deg, var(--accent), #1e40af)' }}>

@@ -165,6 +165,93 @@ body {
   color: var(--text-secondary);
 }
 
+/* Modern Form Styling */
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+.form-input {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: var(--foreground);
+  font-size: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 100%;
+  backdrop-filter: blur(10px);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 
+    0 0 0 3px rgba(0, 178, 255, 0.1),
+    0 4px 12px rgba(0, 178, 255, 0.15);
+  background: rgba(30, 41, 59, 0.9);
+  transform: translateY(-1px);
+}
+
+.form-input::placeholder {
+  color: rgba(148, 163, 184, 0.7);
+  transition: opacity 0.3s ease;
+}
+
+.form-input:focus::placeholder {
+  opacity: 0.5;
+}
+
+/* Enhanced date input styling */
+.input.date-input {
+  position: relative;
+  color-scheme: dark;
+}
+
+.input.date-input::-webkit-calendar-picker-indicator {
+  background: var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: 8px;
+  transition: all 0.3s ease;
+}
+
+.input.date-input::-webkit-calendar-picker-indicator:hover {
+  background: var(--accent-hover);
+  transform: scale(1.1);
+}
+
+/* Modern alert styling */
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.3s ease-out;
+}
+
+.alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #86efac;
+}
+
 /* Utility classes */
 .text-secondary {
   color: var(--text-secondary);
@@ -180,6 +267,19 @@ body {
 
 .border-color {
   border-color: var(--border);
+}
+
+/* Text color utilities */
+.text-error {
+  color: var(--error);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-warning {
+  color: var(--warning);
 }
 
 /* Casino-style neon glow */
