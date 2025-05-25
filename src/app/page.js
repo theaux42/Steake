@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
-import Dashboard from './components/Dashboard';
-import AdminPanel from './components/AdminPanel';
 
 // Register GSAP plugins
 if (typeof window !== 'undefined') {
@@ -18,6 +17,8 @@ export default function Home() {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [redirecting, setRedirecting] = useState(false);
+  const router = useRouter();
 
   const loadingRef = useRef(null);
   const heroRef = useRef(null);
@@ -125,10 +126,20 @@ export default function Home() {
         
         if (response.ok) {
           const data = await response.json();
-          setUser(data.user);
+          if (data.authenticated && data.user) {
+            // User is authenticated, set user and redirect
+            setUser(data.user);
+            setRedirecting(true);
+            // Use replace instead of push to avoid back button issues
+            router.replace('/dashboard');
+            return;
+          }
         }
+        // User is not authenticated, show landing page
+        setUser(null);
       } catch (error) {
         console.error('Session check error:', error);
+        setUser(null);
       } finally {
         setLoading(false);
       }
@@ -161,6 +172,8 @@ export default function Home() {
 
   const handleLogin = (userData) => {
     setUser(userData);
+    setRedirecting(true);
+    router.replace('/dashboard');
   };
 
   const handleLogout = async () => {
@@ -172,13 +185,17 @@ export default function Home() {
     }
   };
 
-  if (loading) {
+  if (loading || redirecting) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)' }}>
         <div ref={loadingRef} className="text-center">
           <div className="loading-spinner mx-auto mb-4"></div>
-          <div className="text-white text-xl font-medium">Loading Steake...</div>
-          <div className="text-secondary text-sm mt-2">Preparing your gaming experience</div>
+          <div className="text-white text-xl font-medium">
+            {redirecting ? 'Redirecting to Dashboard...' : 'Loading Steake...'}
+          </div>
+          <div className="text-secondary text-sm mt-2">
+            {redirecting ? 'Please wait...' : 'Preparing your gaming experience'}
+          </div>
         </div>
       </div>
     );
@@ -437,13 +454,14 @@ export default function Home() {
     );
   }
 
+  // This should not happen if authentication logic is correct
+  // If we reach here, there's a logic error - show loading state
   return (
-    <div className="min-h-screen" style={{ background: 'var(--background)' }}>
-      {user.isAdmin ? (
-        <AdminPanel user={user} onLogout={handleLogout} />
-      ) : (
-        <Dashboard user={user} onLogout={handleLogout} />
-      )}
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)' }}>
+      <div className="text-center">
+        <div className="loading-spinner mx-auto mb-4"></div>
+        <div className="text-white text-xl font-medium">Loading...</div>
+      </div>
     </div>
   );
 }

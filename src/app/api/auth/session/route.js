@@ -8,7 +8,7 @@ export async function GET() {
     
     if (!session || !session.userId) {
       return NextResponse.json(
-        { error: 'No valid session found' },
+        { authenticated: false, error: 'No valid session found' },
         { status: 401 }
       );
     }
@@ -19,7 +19,7 @@ export async function GET() {
     if (!user) {
       // User was deleted, clear the session
       const response = NextResponse.json(
-        { error: 'User not found' },
+        { authenticated: false, error: 'User not found' },
         { status: 401 }
       );
       
@@ -34,6 +34,7 @@ export async function GET() {
     
     // Create response with user data
     const response = NextResponse.json({
+      authenticated: true,
       message: 'Session valid',
       user: {
         id: userWithoutPassword.id,
@@ -52,7 +53,7 @@ export async function GET() {
   } catch (error) {
     console.error('Session validation error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { authenticated: false, error: 'Internal server error' },
       { status: 500 }
     );
   }

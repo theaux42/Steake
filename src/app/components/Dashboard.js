@@ -1,21 +1,18 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { gsap } from 'gsap';
-import DiceGame from './DiceGame';
-import BlackjackGame from './BlackjackGame';
-import MinesGame from './MinesGame';
 
 export default function Dashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('games');
-  const [activeGame, setActiveGame] = useState(null);
   const [currentUser, setCurrentUser] = useState(user);
   const [transactions, setTransactions] = useState([]);
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
   
   const headerRef = useRef(null);
-  const navRef = useRef(null);
   const contentRef = useRef(null);
 
   // Handle balance updates from games
@@ -60,11 +57,6 @@ export default function Dashboard({ user, onLogout }) {
       { y: -50, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }
     )
-    .fromTo(navRef.current,
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" },
-      "-=0.3"
-    )
     .fromTo(contentRef.current,
       { y: 40, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
@@ -74,31 +66,67 @@ export default function Dashboard({ user, onLogout }) {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)' }}>
-      {/* Header */}
+      {/* Compact Header/Navigation */}
       <header ref={headerRef} className="glass border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="container mx-auto px-6 py-4">
+        <div className="container mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
+            {/* Logo and Navigation */}
+            <div className="flex items-center space-x-8">
+              {/* Logo */}
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: 'var(--accent)' }}>
-                  <span className="text-white font-bold text-xl">S</span>
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--accent)' }}>
+                  <span className="text-white font-bold text-sm">S</span>
                 </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-white">Steake</h1>
-                  <p className="text-secondary text-sm">Welcome back, {user.username}</p>
-                </div>
+                <h1 className="text-xl font-bold text-white">Steake</h1>
+              </div>
+              
+              {/* Navigation Tabs */}
+              <div className="flex space-x-6">
+                <button
+                  onClick={() => setActiveTab('games')}
+                  className={`py-2 px-3 rounded-lg transition-all duration-300 font-medium ${
+                    activeTab === 'games'
+                      ? 'text-white bg-blue-600/20 border border-blue-500/30'
+                      : 'text-secondary hover:text-white hover:bg-gray-700/30'
+                  }`}
+                >
+                  Games
+                </button>
+                <button
+                  onClick={() => setActiveTab('history')}
+                  className={`py-2 px-3 rounded-lg transition-all duration-300 font-medium ${
+                    activeTab === 'history'
+                      ? 'text-white bg-blue-600/20 border border-blue-500/30'
+                      : 'text-secondary hover:text-white hover:bg-gray-700/30'
+                  }`}
+                >
+                  History
+                </button>
+                <button
+                  onClick={() => setActiveTab('profile')}
+                  className={`py-2 px-3 rounded-lg transition-all duration-300 font-medium ${
+                    activeTab === 'profile'
+                      ? 'text-white bg-blue-600/20 border border-blue-500/30'
+                      : 'text-secondary hover:text-white hover:bg-gray-700/30'
+                  }`}
+                >
+                  Profile
+                </button>
               </div>
             </div>
+
+            {/* User Info and Actions */}
             <div className="flex items-center space-x-4">
-              <div className="card flex items-center space-x-3 py-2 px-4">
+              <span className="text-secondary text-sm">Welcome, {user.username}</span>
+              <div className="flex items-center space-x-2 bg-gray-800/50 rounded-lg px-3 py-2">
                 <span className="text-secondary text-sm">Balance:</span>
-                <span className="text-white font-bold text-lg" style={{ color: 'var(--accent)' }}>
+                <span className="text-white font-bold" style={{ color: 'var(--accent)' }}>
                   ${parseFloat(currentUser.balance).toFixed(2)}
                 </span>
               </div>
               <button
                 onClick={onLogout}
-                className="btn-secondary"
+                className="text-secondary hover:text-white px-3 py-2 rounded-lg hover:bg-gray-700/30 transition-all duration-300"
               >
                 Logout
               </button>
@@ -107,50 +135,9 @@ export default function Dashboard({ user, onLogout }) {
         </div>
       </header>
 
-      {/* Navigation */}
-      <nav ref={navRef} className="glass border-b" style={{ borderColor: 'var(--border)' }}>
-        <div className="container mx-auto px-6">
-          <div className="flex space-x-8">
-            <button
-              onClick={() => setActiveTab('games')}
-              className={`py-4 px-2 border-b-2 transition-all duration-300 font-medium ${
-                activeTab === 'games'
-                  ? 'text-white'
-                  : 'text-secondary hover:text-white'
-              }`}
-              style={{ borderBottomColor: activeTab === 'games' ? 'var(--accent)' : 'transparent' }}
-            >
-              Games
-            </button>
-            <button
-              onClick={() => setActiveTab('history')}
-              className={`py-4 px-2 border-b-2 transition-all duration-300 font-medium ${
-                activeTab === 'history'
-                  ? 'text-white'
-                  : 'text-secondary hover:text-white'
-              }`}
-              style={{ borderBottomColor: activeTab === 'history' ? 'var(--accent)' : 'transparent' }}
-            >
-              History
-            </button>
-            <button
-              onClick={() => setActiveTab('profile')}
-              className={`py-4 px-2 border-b-2 transition-all duration-300 font-medium ${
-                activeTab === 'profile'
-                  ? 'text-white'
-                  : 'text-secondary hover:text-white'
-              }`}
-              style={{ borderBottomColor: activeTab === 'profile' ? 'var(--accent)' : 'transparent' }}
-            >
-              Profile
-            </button>
-          </div>
-        </div>
-      </nav>
-
       {/* Main Content */}
       <main ref={contentRef} className="container mx-auto px-6 py-8">
-        {activeTab === 'games' && !activeGame && (
+        {activeTab === 'games' && (
           <div className="text-center">
             <h2 className="text-3xl font-bold text-white mb-8">Casino Games</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -174,7 +161,7 @@ export default function Dashboard({ user, onLogout }) {
                 <p className="text-secondary text-sm mb-4">Beat the dealer in classic blackjack</p>
                 <button 
                   className="btn-primary w-full"
-                  onClick={() => setActiveGame('blackjack')}
+                  onClick={() => router.push('/blackjack')}
                 >
                   Play Now
                 </button>
@@ -188,7 +175,7 @@ export default function Dashboard({ user, onLogout }) {
                 <p className="text-secondary text-sm mb-4">Roll the dice and win big</p>
                 <button 
                   className="btn-primary w-full"
-                  onClick={() => setActiveGame('dice')}
+                  onClick={() => router.push('/dice')}
                 >
                   Play Now
                 </button>
@@ -202,7 +189,7 @@ export default function Dashboard({ user, onLogout }) {
                 <p className="text-secondary text-sm mb-4">Find gems while avoiding mines</p>
                 <button 
                   className="btn-primary w-full"
-                  onClick={() => setActiveGame('mines')}
+                  onClick={() => router.push('/mines')}
                 >
                   Play Now
                 </button>
@@ -211,56 +198,7 @@ export default function Dashboard({ user, onLogout }) {
           </div>
         )}
 
-        {activeTab === 'games' && activeGame === 'dice' && (
-          <div>
-            <div className="mb-6">
-              <button
-                onClick={() => setActiveGame(null)}
-                className="btn-secondary"
-              >
-                ← Back to Games
-              </button>
-            </div>
-            <DiceGame 
-              user={currentUser} 
-              onBalanceUpdate={handleBalanceUpdate}
-            />
-          </div>
-        )}
 
-        {activeTab === 'games' && activeGame === 'blackjack' && (
-          <div>
-            <div className="mb-6">
-              <button
-                onClick={() => setActiveGame(null)}
-                className="btn-secondary"
-              >
-                ← Back to Games
-              </button>
-            </div>
-            <BlackjackGame 
-              user={currentUser} 
-              onBalanceUpdate={handleBalanceUpdate}
-            />
-          </div>
-        )}
-
-        {activeTab === 'games' && activeGame === 'mines' && (
-          <div>
-            <div className="mb-6">
-              <button
-                onClick={() => setActiveGame(null)}
-                className="btn-secondary"
-              >
-                ← Back to Games
-              </button>
-            </div>
-            <MinesGame 
-              user={currentUser} 
-              onBalanceUpdate={handleBalanceUpdate}
-            />
-          </div>
-        )}
 
         {activeTab === 'history' && (
           <div className="max-w-4xl mx-auto">

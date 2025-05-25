@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 export default function MinesGame({ user, onBalanceUpdate }) {
-  const [betAmount, setBetAmount] = useState(0.00);
+  const [betAmount, setBetAmount] = useState(10.00);
   const [gameMode, setGameMode] = useState('Manual'); // 'Manual' or 'Auto'
   const [minesCount, setMinesCount] = useState(3);
   const [gemsFound, setGemsFound] = useState(0);
@@ -291,35 +291,12 @@ export default function MinesGame({ user, onBalanceUpdate }) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900">
+    <div className="flex h-4/5  justify-center">
       {/* Left Control Panel */}
-      <div className="w-64 bg-gray-800 p-6 flex flex-col space-y-6">
-        {/* Manual/Auto Toggle */}
-        <div className="flex bg-gray-700 rounded-lg p-1">
-          <button
-            onClick={() => setGameMode('Manual')}
-            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              gameMode === 'Manual' 
-                ? 'bg-blue-600 text-white' 
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            Manual
-          </button>
-          <button
-            onClick={() => setGameMode('Auto')}
-            className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${
-              gameMode === 'Auto' 
-                ? 'bg-blue-600 text-white' 
-                : 'text-gray-300 hover:text-white'
-            }`}
-          >
-            Auto
-          </button>
-        </div>
+      <div className="w-56 bg-gray-800 p-4 flex flex-col space-y-4">
 
         {/* Bet Amount */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="text-white text-sm font-medium">Bet Amount</div>
           <input
             type="number"
@@ -331,22 +308,22 @@ export default function MinesGame({ user, onBalanceUpdate }) {
             min="0.01"
             max={user.balance}
             step="0.01"
-            className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+            className="w-full px-2 py-1.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
             disabled={loading || gameState === 'playing'}
           />
           
-          <div className="flex space-x-2">
+          <div className="flex space-x-1">
             <button
               onClick={halveBet}
               disabled={loading || gameState === 'playing'}
-              className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-2 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
             >
               ½
             </button>
             <button
               onClick={doubleBet}
               disabled={loading || gameState === 'playing'}
-              className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="flex-1 px-2 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm"
             >
               2×
             </button>
@@ -354,32 +331,32 @@ export default function MinesGame({ user, onBalanceUpdate }) {
         </div>
 
         {/* Mines and Gems */}
-        <div className="flex space-x-3">
+        <div className="flex space-x-2">
           <div className="flex-1">
-            <label className="text-white text-sm font-medium block mb-2">Mines</label>
+            <label className="text-white text-sm font-medium block mb-1">Mines</label>
             <input
               type="number"
               value={minesCount}
               onChange={(e) => setMinesCount(Math.max(1, Math.min(24, parseInt(e.target.value) || 1)))}
               min="1"
               max="24"
-              className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none"
+              className="w-full px-2 py-1.5 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none text-sm"
               disabled={loading || gameState === 'playing'}
             />
           </div>
           <div className="flex-1">
-            <label className="text-white text-sm font-medium block mb-2">Gems</label>
+            <label className="text-white text-sm font-medium block mb-1">Gems</label>
             <input
               type="number"
               value={gemsFound}
               readOnly
-              className="w-full px-3 py-2 bg-gray-600 text-gray-300 rounded-lg border border-gray-600 cursor-not-allowed"
+              className="w-full px-2 py-1.5 bg-gray-600 text-gray-300 rounded-lg border border-gray-600 cursor-not-allowed text-sm"
             />
           </div>
         </div>
 
         {/* Total Profit */}
-        <div className="space-y-2">
+        <div className="space-y-1">
           <div className="text-white text-sm font-medium">
             Total profit ({multiplier.toFixed(2)}x)
           </div>
@@ -392,7 +369,7 @@ export default function MinesGame({ user, onBalanceUpdate }) {
         <button
           onClick={pickRandomTile}
           disabled={loading || gameState !== 'playing' || isAnimating}
-          className="w-full py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 font-medium"
+          className="w-full py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 font-medium text-sm"
         >
           Pick random tile
         </button>
@@ -402,9 +379,9 @@ export default function MinesGame({ user, onBalanceUpdate }) {
           ref={cashoutRef}
           onClick={cashout}
           disabled={loading || gameState !== 'playing' || gemsFound === 0}
-          className={`w-full py-4 text-white text-lg font-bold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 ${
+          className={`w-full py-3 text-white text-lg font-bold rounded-lg transition-all duration-200 hover:scale-105 active:scale-95 ${
             gameState === 'playing' && gemsFound > 0
-              ? 'bg-green-600 hover:bg-green-500 border-2 border-red-500'
+              ? 'bg-green-600 hover:bg-green-500 border-2 border-green-500'
               : 'bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed'
           }`}
         >
@@ -415,20 +392,20 @@ export default function MinesGame({ user, onBalanceUpdate }) {
         <button
           onClick={gameState === 'betting' ? startGame : newGame}
           disabled={loading || isAnimating || (gameState === 'betting' && (betAmount <= 0 || betAmount > user.balance))}
-          className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 font-medium"
+          className="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 hover:scale-105 active:scale-95 font-medium text-sm"
         >
           {loading ? 'Loading...' : gameState === 'betting' ? 'Start Game' : 'New Game'}
         </button>
       </div>
 
       {/* Main Game Grid */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
+      <div className="flex flex-col items-center justify-center p-3" style={{ width: 'min(70vh, 70vw)' }}>
         {/* 5x5 Grid Container */}
-        <div className="relative w-full h-full max-w-[min(80vh,80vw)] max-h-[min(80vh,80vw)]" style={{ aspectRatio: '1' }}>
+        <div className="relative w-full h-full" style={{ aspectRatio: '1' }}>
           {/* 5x5 Grid */}
           <div 
             ref={gridRef}
-            className={`grid grid-cols-5 gap-2 bg-gray-800 p-3 rounded-xl w-full h-full ${
+            className={`grid grid-cols-5 gap-1.5 bg-gray-800 p-2 rounded-xl w-full h-full ${
               gameState !== 'playing' ? 'opacity-50' : ''
             }`}
             style={{ gridTemplateRows: 'repeat(5, 1fr)' }}
@@ -449,17 +426,17 @@ export default function MinesGame({ user, onBalanceUpdate }) {
                 style={{ aspectRatio: '1' }}
               >
                 {tile === 'gem' && (
-                  <div className="gem text-green-200 font-bold drop-shadow-lg" style={{ fontSize: 'min(3rem, 8vw, 8vh)' }}>
+                  <div className="gem text-green-200 font-bold drop-shadow-lg" style={{ fontSize: 'min(2.5rem, 6vw, 6vh)' }}>
                     ♦
                   </div>
                 )}
                 {tile === 'mine' && (
-                  <div className="text-white font-bold drop-shadow-lg" style={{ fontSize: 'min(2.5rem, 7vw, 7vh)' }}>
+                  <div className="text-white font-bold drop-shadow-lg" style={{ fontSize: 'min(2rem, 5vw, 5vh)' }}>
                     💣
                   </div>
                 )}
                 {tile === null && gameState !== 'playing' && (
-                  <div className="text-gray-600" style={{ fontSize: 'min(2rem, 6vw, 6vh)' }}>
+                  <div className="text-gray-600" style={{ fontSize: 'min(1.5rem, 4vw, 4vh)' }}>
                     ?
                   </div>
                 )}
@@ -467,12 +444,12 @@ export default function MinesGame({ user, onBalanceUpdate }) {
             ))}
           </div>
 
-          {/* Game State Overlay - Now only covers the grid container */}
+          {/* Game State Overlay */}
           {gameState === 'betting' && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-xl">
               <div className="text-center">
-                <div className="text-white text-2xl font-bold mb-2">💎 MINES 💎</div>
-                <div className="text-gray-300 text-lg">Set your bet and click "Start Game"</div>
+                <div className="text-white text-xl font-bold mb-2">💎 MINES 💎</div>
+                <div className="text-gray-300 text-base">Set your bet and click "Start Game"</div>
               </div>
             </div>
           )}
@@ -480,25 +457,27 @@ export default function MinesGame({ user, onBalanceUpdate }) {
           {gameState === 'finished' && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-xl">
               <div className="text-center">
-                <div className="text-white text-2xl font-bold mb-2">Game Over</div>
-                <div className="text-gray-300 text-lg">Click "New Game" to play again</div>
+                <div className="text-white text-xl font-bold mb-2">Game Over</div>
+                <div className="text-gray-300 text-base">Click "New Game" to play again</div>
+              </div>
+            </div>
+          )}
+
+          {/* Messages Overlay - Centered on grid */}
+          {message && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/70 rounded-xl">
+              <div className={`text-center p-4 rounded-lg text-lg font-bold max-w-xs ${
+                message.includes('BOOM') 
+                  ? 'bg-red-500/90 text-white border-2 border-red-400'
+                  : message.includes('Cashed out')
+                  ? 'bg-green-500/90 text-white border-2 border-green-400'
+                  : 'bg-blue-500/90 text-white border-2 border-blue-400'
+              }`}>
+                {message}
               </div>
             </div>
           )}
         </div>
-
-        {/* Messages */}
-        {message && (
-          <div className={`mt-6 text-center p-4 rounded-lg text-lg font-medium ${
-            message.includes('BOOM') 
-              ? 'bg-red-500/20 text-red-400'
-              : message.includes('Cashed out')
-              ? 'bg-green-500/20 text-green-400'
-              : 'bg-blue-500/20 text-blue-400'
-          }`}>
-            {message}
-          </div>
-        )}
       </div>
     </div>
   );

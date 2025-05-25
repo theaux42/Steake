@@ -1,21 +1,6 @@
 import { NextResponse } from 'next/server';
 import { userOperations, transactionOperations } from '../../../../../lib/database.js';
-import { cookies } from 'next/headers';
-
-async function getSession() {
-  const cookieStore = await cookies();
-  const sessionCookie = cookieStore.get('steake-session');
-  
-  if (!sessionCookie) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(sessionCookie.value);
-  } catch {
-    return null;
-  }
-}
+import { getSession } from '../../../../../lib/session.js';
 
 export async function POST(request) {
   try {
